@@ -53,13 +53,21 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 app.post("/upload", upload.single('product'), (req, res) => {
+
   if (!req.file) {
-    return res.status(400).json({ success: 0, error: "No file uploaded" });
+    return res.status(400).json({
+      success: 0,
+      error: "No file uploaded"
+    });
   }
+
+  const imageUrl = `https://ecommerce-mern-gtek.onrender.com/images/${req.file.filename}`;
+
   res.json({
     success: 1,
-    image_url: `https://ecommerce-mern-gtek.onrender.com/images/${req.file.filename}`
+    image_url: imageUrl
   });
+
 });
 
 app.use('/images', express.static(path.join(__dirname, "upload/images")));
