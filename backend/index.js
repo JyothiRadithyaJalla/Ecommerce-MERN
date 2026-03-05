@@ -23,6 +23,8 @@ const allowedOrigins = [
   "http://localhost:3005",
   "http://localhost:5173",
   "http://localhost:4000",
+  "https://ecommerce-mern-beige.vercel.app",
+  "https://ecommerce-mern-adeilzabe-jyothiradithyajallas-projects.vercel.app",
   process.env.FRONTEND_URL || "http://localhost:3000",
   process.env.ADMIN_URL || "http://localhost:3001"
 ];
