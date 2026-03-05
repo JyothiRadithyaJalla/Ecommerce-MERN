@@ -29,15 +29,10 @@ const allowedOrigins = [
   process.env.ADMIN_URL || "http://localhost:3001"
 ];
 
+
+
 app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (same-origin requests, curl, etc.)
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+  origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
@@ -63,7 +58,7 @@ app.post("/upload", upload.single('product'), (req, res) => {
   }
   res.json({
     success: 1,
-    image_url: `/images/${req.file.filename}`
+    image_url: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
   });
 });
 
