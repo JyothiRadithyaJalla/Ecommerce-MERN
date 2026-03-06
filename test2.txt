@@ -1,0 +1,6 @@
+5 https://ecommerce-mern-gtek.onrender.com/images/product_1772777449008.png
+9 https://ecommerce-mern-gtek.onrender.com/images/product_1772777966456.webp
+14 https://ecommerce-mern-gtek.onrender.com/images/product_1772779484315.webp
+15 https://ecommerce-mern-gtek.onrender.com/images/product_1772790364684.png
+16 https://ecommerce-mern-gtek.onrender.com/images/product_1772790368717.png
+17 https://ecommerce-mern-gtek.onrender.com/images/product_1772801954011.png

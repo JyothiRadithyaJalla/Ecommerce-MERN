@@ -1,0 +1,26 @@
+diff --git a/admin/src/Components/AddProduct/AddProduct.jsx b/admin/src/Components/AddProduct/AddProduct.jsx
+index f687224..53d8e1d 100644
+--- a/admin/src/Components/AddProduct/AddProduct.jsx
++++ b/admin/src/Components/AddProduct/AddProduct.jsx
+@@ -33,7 +33,7 @@ const AddProduct = () => {
+       .then((data) => { dataObj = data });
+ 
+     if (dataObj.success) {
+-      product.image = dataObj.image_url;
++      product.image = dataObj.image_url.split("/images/")[1];
+       await fetch(`${backend_url}/addproduct`, {
+         method: 'POST',
+         headers: {
+diff --git a/admin/src/Components/ListProduct/ListProduct.jsx b/admin/src/Components/ListProduct/ListProduct.jsx
+index f791847..1edd62a 100644
+--- a/admin/src/Components/ListProduct/ListProduct.jsx
++++ b/admin/src/Components/ListProduct/ListProduct.jsx
+@@ -44,7 +44,7 @@ const ListProduct = () => {
+         {allproducts.map((e, index) => (
+           <div key={index}>
+             <div className="listproduct-format-main listproduct-format">
+-              <img className="listproduct-product-icon" src={backend_url + e.image} alt="" />
++              <img className="listproduct-product-icon" src={e.image} alt="" />
+               <p className="cartitems-product-title">{e.name}</p>
+               <p>{currency}{e.old_price}</p>
+               <p>{currency}{e.new_price}</p>
