@@ -3,7 +3,7 @@ import axios from "axios";
 function CheckoutButton({ amount }) {
   const handlePayment = async () => {
     try {
-      const { data: { order } } = await axios.post("http://localhost:4000/api/payment/checkout", { amount });
+      const { data: { order } } = await axios.post("https://ecommerce-mern-gtek.onrender.com/api/payment/checkout", { amount });
 
       const options = {
         key: process.env.REACT_APP_RAZORPAY_KEY, 
@@ -18,7 +18,7 @@ function CheckoutButton({ amount }) {
         
         if (authToken) {
           try {
-            const userResponse = await axios.post("http://localhost:4000/getuser", {}, {
+            const userResponse = await axios.post("https://ecommerce-mern-gtek.onrender.com/getuser", {}, {
               headers: {
                 'auth-token': authToken,
                 'Content-Type': 'application/json'
@@ -32,7 +32,7 @@ function CheckoutButton({ amount }) {
           }
         }
         
-        await axios.post("http://localhost:4000/api/payment/paymentverification", {
+        await axios.post("https://ecommerce-mern-gtek.onrender.com/api/payment/paymentverification", {
           ...response,
           email: userEmail,
           amount: amount
