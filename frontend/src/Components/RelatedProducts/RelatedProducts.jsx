@@ -32,7 +32,7 @@ const RelatedProducts = ({ category, id }) => {
               key={index}
               id={item.id}
               name={item.name}
-              image={`${backend_url}/images/${item.image}`}
+              image={item.image}
               new_price={item.new_price}
               old_price={item.old_price}
             />
