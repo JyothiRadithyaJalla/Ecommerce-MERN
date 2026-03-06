@@ -13,7 +13,7 @@ const Item = (props) => {
         <img
   
           onClick={() => window.scrollTo(0,0)}
-              src={props.image}
+              src={`${backend_url}/images/${props.image}`}
           alt="products"
         />
 
