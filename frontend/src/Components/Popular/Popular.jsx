@@ -1,6 +1,7 @@
 import React from 'react'
 import './Popular.css'
 import Item from '../Item/Item'
+import { backend_url } from '../../App'
 
 const Popular = (props) => {
   return (
@@ -9,7 +10,7 @@ const Popular = (props) => {
       <hr />
       <div className="popular-item">
         {props.data.map((item,index)=>{
-            return <Item id={item.id} key={index} name={item.name} image={item.image}  new_price={item.new_price} old_price={item.old_price}/>
+            return <Item id={item.id} key={index} name={item.name} image={`${backend_url}/images/${item.image}`} new_price={item.new_price} old_price={item.old_price}/>
         })}
       </div>
     </div>
