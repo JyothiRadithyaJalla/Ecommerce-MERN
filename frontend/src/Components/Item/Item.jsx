@@ -1,7 +1,7 @@
 import React from 'react'
 import './Item.css'
 import { Link } from 'react-router-dom'
-import { currency } from '../../App'
+import { currency, backend_url } from '../../App'
 
 const Item = (props) => {
   
@@ -10,12 +10,11 @@ const Item = (props) => {
 
     <div className='item'>
       <Link to={`/product/${props.id}`}>
-        <img
-  
-          onClick={() => window.scrollTo(0,0)}
-               src={props.image}
-          alt="products"
-        />
+       <img
+  onClick={() => window.scrollTo(0,0)}
+  src={`${backend_url}/images/${props.image}`}
+  alt="products"
+/>
 
       </Link>
 
