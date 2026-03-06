@@ -69,13 +69,16 @@ app.post("/upload", upload.single('product'), (req, res) => {
     });
   }
 
-  const imageUrl = `https://ecommerce-mern-gtek.onrender.com/images/${req.file.filename}`;
+  const port = process.env.PORT || 4000;
+  const baseUrl = process.env.BACKEND_URL || (req.hostname === 'localhost' ? `http://localhost:${port}` : `https://${req.hostname}`);
+  const imageUrl = `${baseUrl}/images/${req.file.filename}`;
 
   res.json({
     success: 1,
     image_url: imageUrl
   });
 
+  
 });
 
 
