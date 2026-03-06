@@ -3,13 +3,14 @@ import "./CSS/ShopCategory.css";
 import dropdown_icon from '../Components/Assets/dropdown_icon.png'
 import Item from "../Components/Item/Item";
 import { Link } from "react-router-dom";
+import { backend_url } from "../App";
 
 const ShopCategory = (props) => {
 
   const [allproducts, setAllProducts] = useState([]);
 
   const fetchInfo = () => { 
-    fetch('https://ecommerce-mern-gtek.onrender.com/allproducts') 
+    fetch(`${backend_url}/allproducts`)
             .then((res) => res.json()) 
             .then((data) => setAllProducts(data))
     }
@@ -29,7 +30,7 @@ const ShopCategory = (props) => {
         {allproducts.map((item,i) => {
             if(props.category===item.category)
             {
-              return <Item id={item.id} key={i} name={item.name} image={item.image}  new_price={item.new_price} old_price={item.old_price}/>;
+              return <Item id={item.id} key={i} name={item.name} image={`${backend_url}/images/${item.image}`}  new_price={item.new_price} old_price={item.old_price}/>;
             }
             else
             {
