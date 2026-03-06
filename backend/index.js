@@ -8,10 +8,14 @@ const cors = require("cors");
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
 require("dotenv").config();
+const fs = require("fs");
+
 
 const PORT = process.env.PORT || 4000;
 const MONGO_URI = process.env.MONGO_URI;
 const JWT_SECRET = process.env.JWT_SECRET || "secret_ecom";
+
+app.use('/images', express.static(path.join(__dirname, "upload/images")));
 
 app.use(express.json());
 const allowedOrigins = [
@@ -42,6 +46,10 @@ mongoose.connect(MONGO_URI)
   .catch((err) => console.error("MongoDB connection error:", err));
 
 const uploadDir = path.join(__dirname, "upload/images");
+
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, uploadDir);
@@ -70,7 +78,7 @@ app.post("/upload", upload.single('product'), (req, res) => {
 
 });
 
-app.use('/images', express.static(path.join(__dirname, "upload/images")));
+
 
 const fetchuser = async (req, res, next) => {
   const token = req.header("auth-token");
