@@ -9,6 +9,22 @@ const CartItems = () => {
   const { products } = useContext(ShopContext);
   const { cartItems, removeFromCart, getTotalCartAmount } = useContext(ShopContext);
 
+  const resolveImage = (img) => {
+    if (!img) return '';
+    if (img.startsWith('http')) return img;
+    const cleanImg = img.replace(/^\//, ''); // remove leading slash if any
+    
+    // Ensure we don't duplicate /images/ if backend_url already has it somehow
+    const baseUrl = backend_url.endsWith('/') ? backend_url.slice(0, -1) : backend_url;
+    
+    // Some corrupted DB entries might have the domain embedded without http
+    if (cleanImg.includes('onrender.com')) {
+       return `https://${cleanImg.replace('https://', '')}`;
+    }
+    
+    return `${baseUrl}/images/${cleanImg}`;
+  };
+
   const [availableCoupons, setAvailableCoupons] = useState([]);
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [discountedTotal, setDiscountedTotal] = useState(0);
@@ -118,7 +134,7 @@ const CartItems = () => {
           return (
             <div key={e.id}>
               <div className="cartitems-format-main cartitems-format">
-                <img className="cartitems-product-icon" src={e.image} alt="" />
+                <img className="cartitems-product-icon" src={resolveImage(e.image)} alt="" />
                 <p cartitems-product-title>{e.name}</p>
                 <p>{currency}{e.new_price}</p>
                 <button className="cartitems-quantity">{cartItems[e.id]}</button>

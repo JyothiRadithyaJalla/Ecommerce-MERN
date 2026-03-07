@@ -3,12 +3,20 @@ const app = express();
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const multer = require("multer");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("cloudinary").v2;
 const path = require("path");
 const cors = require("cors");
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
 require("dotenv").config();
 const fs = require("fs");
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 
 const PORT = process.env.PORT || 4000;
@@ -50,14 +58,31 @@ const uploadDir = path.join(__dirname, "upload/images");
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`);
-  }
-});
+
+// Use Cloudinary if credentials are available, otherwise use local disk storage
+let storage;
+if (process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET) {
+  console.log("Using Cloudinary storage for image uploads");
+  storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+      folder: "ecommerce-mern",
+      allowed_formats: ["jpg", "png", "jpeg", "webp"],
+      public_id: (req, file) => `${file.fieldname}_${Date.now()}`,
+    },
+  });
+} else {
+  console.log("Cloudinary credentials not found, using local disk storage");
+  storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, uploadDir);
+    },
+    filename: (req, file, cb) => {
+      cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`);
+    }
+  });
+}
+
 const upload = multer({ storage: storage });
 
 app.post("/upload", upload.single('product'), (req, res) => {
@@ -69,13 +94,21 @@ app.post("/upload", upload.single('product'), (req, res) => {
     });
   }
 
-  const port = process.env.PORT || 4000;
-  const baseUrl = process.env.BACKEND_URL || (req.hostname === 'localhost' ? `http://localhost:${port}` : `https://${req.hostname}`);
-  const imageUrl = `${baseUrl}/images/${req.file.filename}`;
+  // Cloudinary returns the URL in req.file.path, local storage uses req.file.filename
+  let image_url;
+  if (req.file.path && req.file.path.startsWith('http')) {
+    // Cloudinary URL
+    image_url = req.file.path;
+  } else {
+    // Local storage - build URL
+    const port = process.env.PORT || 4000;
+    const baseUrl = process.env.BACKEND_URL || (req.hostname === 'localhost' ? `http://localhost:${port}` : `https://${req.hostname}`);
+    image_url = `${baseUrl}/images/${req.file.filename}`;
+  }
 
   res.json({
     success: 1,
-    image_url: imageUrl
+    image_url: image_url
   });
 
   

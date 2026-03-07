@@ -6,6 +6,21 @@ import { ShopContext } from "../../Context/ShopContext";
 import { backend_url, currency } from "../../App";
 
 const ProductDisplay = ({product}) => {
+  const resolveImage = (img) => {
+    if (!img) return '';
+    if (img.startsWith('http')) return img;
+    const cleanImg = img.replace(/^\//, ''); // remove leading slash if any
+    
+    // Ensure we don't duplicate /images/ if backend_url already has it somehow
+    const baseUrl = backend_url.endsWith('/') ? backend_url.slice(0, -1) : backend_url;
+    
+    // Some corrupted DB entries might have the domain embedded without http
+    if (cleanImg.includes('onrender.com')) {
+       return `https://${cleanImg.replace('https://', '')}`;
+    }
+    
+    return `${baseUrl}/images/${cleanImg}`;
+  };
 
   const {addToCart} = useContext(ShopContext);
 
@@ -13,12 +28,12 @@ const ProductDisplay = ({product}) => {
     <div className="productdisplay">
       <div className="productdisplay-left">
         <div className="productdisplay-img-list">
-  <img src={`${backend_url}/images/${product.image}`} alt="img" />
-  <img src={`${backend_url}/images/${product.image}`} alt="img" />
-  <img src={`${backend_url}/images/${product.image}`} alt="img" />
+  <img src={resolveImage(product.image)} alt="img" />
+  <img src={resolveImage(product.image)} alt="img" />
+  <img src={resolveImage(product.image)} alt="img" />
 </div>
         <div className="productdisplay-img">
-          <img className="productdisplay-main-img" src={`${backend_url}/images/${product.image}`} alt="img" />
+          <img className="productdisplay-main-img" src={resolveImage(product.image)} alt="img" />
         </div>
       </div>
       <div className="productdisplay-right">

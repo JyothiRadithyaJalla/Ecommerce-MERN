@@ -6,6 +6,22 @@ import { backend_url, currency } from "../../App";
 const ListProduct = () => {
   const [allproducts, setAllProducts] = useState([]);
 
+  const resolveImage = (img) => {
+    if (!img) return '';
+    if (img.startsWith('http')) return img;
+    const cleanImg = img.replace(/^\//, ''); // remove leading slash if any
+    
+    // Ensure we don't duplicate /images/ if backend_url already has it somehow
+    const baseUrl = backend_url.endsWith('/') ? backend_url.slice(0, -1) : backend_url;
+    
+    // Some corrupted DB entries might have the domain embedded without http
+    if (cleanImg.includes('onrender.com')) {
+       return `https://${cleanImg.replace('https://', '')}`;
+    }
+    
+    return `${baseUrl}/images/${cleanImg}`;
+  };
+
   const fetchInfo = () => {
     fetch(`${backend_url}/allproducts`)
       .then((res) => {
@@ -44,7 +60,7 @@ const ListProduct = () => {
         {allproducts.map((e, index) => (
           <div key={index}>
             <div className="listproduct-format-main listproduct-format">
-              <img className="listproduct-product-icon" src={e.image} alt="" />
+              <img className="listproduct-product-icon" src={resolveImage(e.image)} alt="" />
               <p className="cartitems-product-title">{e.name}</p>
               <p>{currency}{e.old_price}</p>
               <p>{currency}{e.new_price}</p>

@@ -33,7 +33,7 @@ const AddProduct = () => {
       .then((data) => { dataObj = data });
 
     if (dataObj.success) {
-      product.image = dataObj.image_url.split("/images/")[1];
+      product.image = dataObj.image_url.includes('/images/') ? dataObj.image_url.split("/images/")[1] : dataObj.image_url;
       await fetch(`${backend_url}/addproduct`, {
         method: 'POST',
         headers: {
