@@ -1,7 +1,7 @@
 import React from 'react'
 import './Popular.css'
 import Item from '../Item/Item'
-import { backend_url } from '../../App'
+
 
 const Popular = (props) => {
   return (
